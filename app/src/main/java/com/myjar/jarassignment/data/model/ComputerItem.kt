@@ -1,11 +1,16 @@
 package com.myjar.jarassignment.data.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+
+@Entity(tableName = "computer_item")
 data class ComputerItem(
-    val id: String,
+    @PrimaryKey val id: String,
     val name: String,
-    val data: ItemData? = null
+    @Embedded val data: ItemData? = null
 )
 
 data class ItemData(

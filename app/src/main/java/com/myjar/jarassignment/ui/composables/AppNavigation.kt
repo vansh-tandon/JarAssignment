@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
@@ -32,7 +34,7 @@ fun AppNavigation(
     viewModel: JarViewModel,
 ) {
     val navController = rememberNavController()
-    val navigate = remember { mutableStateOf<String>("") }
+    val navigate = remember { mutableStateOf("") }
 
     NavHost(modifier = modifier, navController = navController, startDestination = "item_list") {
         composable("item_list") {
@@ -57,40 +59,81 @@ fun ItemListScreen(
     navigate: MutableState<String>,
     navController: NavHostController
 ) {
-    val items = viewModel.listStringData.collectAsState()
+    val items = viewModel.filteredList.collectAsState()
+    val searchText = viewModel.searchText.collectAsState()
 
     if (navigate.value.isNotBlank()) {
         val currRoute = navController.currentDestination?.route.orEmpty()
         if (!currRoute.contains("item_detail")) {
             navController.navigate("item_detail/${navigate.value}")
+            navigate.value = ""
         }
     }
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        items(items.value) { item ->
-            ItemCard(
-                item = item,
-                onClick = { onNavigateToDetail(item.id) }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        TextField(modifier = Modifier.fillMaxWidth(),value = searchText.value, placeholder = { Text(text = "Search")}, onValueChange = viewModel::onSearchTextChange )
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            items(items.value) { item ->
+                ItemCard(
+                    item = item,
+                    onClick = { onNavigateToDetail(item.id) }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
+
 }
 
 @Composable
 fun ItemCard(item: ComputerItem, onClick: () -> Unit) {
+    val itemData = item.data
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { onClick() }
     ) {
-        Text(text = item.name, fontWeight = FontWeight.Bold, color = Color.Transparent)
+        Text(
+            text = item.name,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        itemData?.color?.let {
+            Text(
+                text = itemData.color.toString(),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        itemData?.price?.let {
+            Text(
+                text = itemData.price.toString(),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        itemData?.description?.let {
+            Text(
+                text = itemData.description.toString(),
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
+
+
+
+
 }
+
+
 
 @Composable
 fun ItemDetailScreen(itemId: String?) {

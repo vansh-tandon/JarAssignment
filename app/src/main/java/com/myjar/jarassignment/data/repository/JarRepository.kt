@@ -3,6 +3,7 @@ package com.myjar.jarassignment.data.repository
 import com.myjar.jarassignment.data.api.ApiService
 import com.myjar.jarassignment.data.model.ComputerItem
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
 interface JarRepository {
@@ -10,9 +11,11 @@ interface JarRepository {
 }
 
 class JarRepositoryImpl(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+
 ) : JarRepository {
     override suspend fun fetchResults(): Flow<List<ComputerItem>> = flow {
-        apiService.fetchResults()
+        val response = apiService.fetchResults()
+        emit(response)
     }
 }
