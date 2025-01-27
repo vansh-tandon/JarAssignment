@@ -8,10 +8,11 @@ import com.myjar.jarassignment.utils.NetworkUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 interface JarRepository {
-    suspend fun fetchResults(): Flow<List<ComputerItem>>
+    suspend fun fetchResults(): Flow<Pair<Boolean, List<ComputerItem>>>
 }
 
 class JarRepositoryImpl @Inject constructor(
@@ -19,11 +20,15 @@ class JarRepositoryImpl @Inject constructor(
     private val dao: ComputerItemDao,
     private val context: Context
 ) : JarRepository {
-    override suspend fun fetchResults(): Flow<List<ComputerItem>> = flow {
+    override suspend fun fetchResults(): Flow<Pair<Boolean, List<ComputerItem>>> = flow {
+        val isCached: Boolean
         if (NetworkUtils.hasInternetConnection(context)) {
             val response = apiService.fetchResults()
             dao.insertAll(response)
+            isCached = false
+        } else {
+            isCached = true
         }
-        emitAll(dao.getAll())
+        emitAll(dao.getAll().map { Pair(isCached, it) })
     }
 }

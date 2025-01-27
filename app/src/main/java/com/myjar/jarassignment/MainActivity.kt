@@ -1,6 +1,7 @@
 package com.myjar.jarassignment
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             LaunchedEffect(Unit) {
                 viewModel.fetchData()
+            }
+
+            LaunchedEffect(Unit) {
+                viewModel.cachedDataEvent.collect { isCached ->
+                    if (isCached) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Showing cached version",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
             JarAssignmentTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

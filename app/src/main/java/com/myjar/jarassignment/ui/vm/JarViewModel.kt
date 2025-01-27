@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.myjar.jarassignment.data.remote.model.ComputerItem
 import com.myjar.jarassignment.data.repository.JarRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -25,6 +27,9 @@ class JarViewModel @Inject constructor(
     val searchText: StateFlow<String>
         get() = _searchText
 
+    private val _cachedDataEvent = MutableSharedFlow<Boolean>()
+    val cachedDataEvent: SharedFlow<Boolean> = _cachedDataEvent
+
 
     val filteredList: StateFlow<List<ComputerItem>> = searchText
         .debounce(300L)
@@ -43,8 +48,9 @@ class JarViewModel @Inject constructor(
 
     fun fetchData() {
         viewModelScope.launch {
-            repository.fetchResults().collect{
-                _listStringData.value = it
+            repository.fetchResults().collect { result ->
+                _cachedDataEvent.emit(result.first)
+                _listStringData.value = result.second
             }
         }
     }
