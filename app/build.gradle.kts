@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.dagger.hilt.android")
     id ("kotlin-kapt")
 }
 
@@ -41,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.12"
     }
     packaging {
         resources {
@@ -50,6 +51,7 @@ android {
     }
     kapt {
         correctErrorTypes = true
+        useBuildCache = true
     }
 }
 
@@ -79,8 +81,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
 
-    // If this project uses any Kotlin source, use Kotlin Symbol Processing (KSP)
-    // See Add the KSP plugin to your project
 
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
 }

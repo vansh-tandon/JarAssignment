@@ -1,10 +1,8 @@
-package com.myjar.jarassignment.data.model
-
+package com.myjar.jarassignment.data.remote.model
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-
 
 @Entity(tableName = "computer_item")
 data class ComputerItem(

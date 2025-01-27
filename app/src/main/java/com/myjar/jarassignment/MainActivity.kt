@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import com.myjar.jarassignment.ui.vm.JarViewModel
 import com.myjar.jarassignment.ui.composables.AppNavigation
 import com.myjar.jarassignment.ui.theme.JarAssignmentTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<JarViewModel>()

@@ -18,14 +18,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.myjar.jarassignment.data.model.ComputerItem
+import com.myjar.jarassignment.data.remote.model.ComputerItem
 import com.myjar.jarassignment.ui.vm.JarViewModel
 
 @Composable
